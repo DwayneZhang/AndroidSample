@@ -3,6 +3,7 @@
 #### 前言 
 Android的日常开发中，RecyclerView绝对是个高频使用的控件,我们也经常碰到各种常见的需求，
 比如粘性头部，多级列表等等，这会开一个系列，记录这些有关RecyclerView功能的实现方式。
+内容会同步至我的[CSDN博客](https://blog.csdn.net/u012987393)
 
 #### 效果
 ![](ScreenCapture/device-2019-05-20-220018.png)
