@@ -5,6 +5,7 @@ Android的日常开发中，RecyclerView绝对是个高频使用的控件,我们
 比如粘性头部，多级列表等等，这会开一个系列，记录这些有关RecyclerView功能的实现方式。
 
 #### 效果
+![](ScreenCapture/device-2019-05-20-220018.png)
 
 #### 实现思路
 思路很巧妙，也很简单，在RecyclerView外部容器添加一个HeaderView，然后RecyclerView每一个Item
