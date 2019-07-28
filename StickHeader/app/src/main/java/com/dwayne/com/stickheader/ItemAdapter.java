@@ -22,11 +22,11 @@ import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private List<String> lists;
-    private Context context;
     public static final int FIRST_STICKY_VIEW = 1;
     public static final int HAS_STICKY_VIEW = 2;
     public static final int NONE_STICKY_VIEW = 3;
+    private List<String> lists;
+    private Context context;
 
 
     public ItemAdapter(Context context, List<String> lists) {
@@ -38,7 +38,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // 实例化展示的view
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list
+                , viewGroup, false);
         // 实例化viewholder
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -57,7 +58,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
              * 根据自己头部需要展示的文本判断，如果和上一条相同，则隐藏
              * 判断头部隐藏与否的方式很多，根据自己的实际情况选择
              */
-            if(lists.get(i).equals(lists.get(i -1))) {
+            if(lists.get(i).equals(lists.get(i - 1))) {
                 viewHolder.stickyHeader.setVisibility(View.GONE);
                 viewHolder.itemView.setTag(NONE_STICKY_VIEW);
             } else {
@@ -79,9 +80,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            stickyHeader = (LinearLayout) itemView.findViewById(R.id.sticky_header);
-            tvHeader = (TextView) itemView.findViewById(R.id.tv_header);
-            tvContent = (TextView) itemView.findViewById(R.id.tv_content);
+            stickyHeader = itemView.findViewById(R.id.sticky_header);
+            tvHeader = itemView.findViewById(R.id.tv_header);
+            tvContent = itemView.findViewById(R.id.tv_content);
         }
     }
 }

@@ -21,12 +21,12 @@
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="这是头部"
                 android:textColor="@color/colorText"
-                android:textSize="14sp"
-                android:text="这是头部"/>
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -40,18 +40,19 @@
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="这是内容"
                 android:textColor="@color/colorText"
-                android:textSize="16sp"
-                android:text="这是内容"/>
+                android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
-                android:background="@color/colorHeader"/>
+                android:background="@color/colorHeader" />
         </LinearLayout>
 
     </LinearLayout>
