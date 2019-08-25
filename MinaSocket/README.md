@@ -2,7 +2,7 @@
 
 #### 前言
 
-Socket长连接是Android开发中很基础的功能，很多的App都会用到这个功能，实现的方式有很多，我今天就只写基于Apache Mina框架的实现方式，至于TCP/IP协议相关的知识就不涉及了，想了解更多关于Socket长连接知识的，可以去看看[刚哥的文章](https://juejin.im/post/5b3649d751882552f052703b)
+Socket长连接是Android开发中很基础的功能，很多的App都会用到这个功能，实现的方式有很多，我今天就只写基于Apache Mina框架的实现方式，至于TCP/IP协议相关的知识就不涉及了，想了解更多关于Socket长连接知识的，可以去看看[刚哥的文章](https://juejin.im/post/5b3649d751882552f052703b)，本文内容会同步至我的[CSDN博客](https://blog.csdn.net/u012987393)
 
 #### Apache Mina介绍
 
@@ -54,7 +54,85 @@ NioSocketConnector mSocketConnector = new NioSocketConnector();
                 ConnectFuture mFuture = mSocketConnector.connect(mSocketAddress);
 ```
 
-编码，解码协议，根据实际情况而已
+断线重连处理，有一点不同，mSocketConnector在添加相关协议的时候，要先判断
+
+```java
+int count = 0;// 记录尝试重连的次数
+                NioSocketConnector mSocketConnector = null;
+                while (!isRepeat[0] && count < 10) {
+                    try {
+                        count++;
+                        if (mSocketConnector == null) {
+                            mSocketConnector = new NioSocketConnector();
+                        }
+
+//                        mSocketConnector.setConnectTimeoutMillis(Constants.TIMEOUT);
+
+                        if (!mSocketConnector.getFilterChain().contains("protocol")) {
+                            //设置协议封装解析处理
+                            mSocketConnector.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new FrameCodecFactory()));
+                        }
+
+                        if (!mSocketConnector.getFilterChain().contains("logger")) {
+                            // 设置日志输出工厂
+                            mSocketConnector.getFilterChain().addLast("logger", new LoggingFilter());
+                        }
+
+                        /*if (!mSocketConnector.getFilterChain().contains("heartbeat")) {
+                            //设置心跳包
+                            KeepAliveFilter heartFilter = new KeepAliveFilter(new HeartBeatMessageFactory());
+                            //每 1 分钟发送一个心跳包
+                            heartFilter.setRequestInterval(1 * 60);
+                            //心跳包超时时间 10s
+                            heartFilter.setRequestTimeout(10);
+//                            heartFilter.setRequestTimeoutHandler(new HeartBeatTimeoutHandler());
+                            mSocketConnector.getFilterChain().addLast("heartbeat", heartFilter);
+                        }*/
+
+                        //设置 handler 处理业务逻辑
+                        mSocketConnector.setHandler(new MessageHandler(context));
+                        mSocketConnector.addListener(new MessageListener(mSocketConnector));
+
+                        // 设置接收和发送缓冲区大小
+                        mSocketConnector.getSessionConfig().setReceiveBufferSize(1024);
+//                        mSocketConnector.getSessionConfig().setSendBufferSize(1024);
+                        // 设置读取空闲时间：单位为s
+                        mSocketConnector.getSessionConfig().setReaderIdleTime(60);
+
+                        //配置服务器地址
+                        InetSocketAddress mSocketAddress = new InetSocketAddress(Constants.HOST, Constants.PORT);
+                        //发起连接
+                        ConnectFuture mFuture = mSocketConnector.connect(mSocketAddress);
+                        mFuture.awaitUninterruptibly();
+                        IoSession mSession = mFuture.getSession();
+                        if (mSession.isConnected()) {
+                            isRepeat[0] = true;
+                            e.onNext(mSession);
+                            e.onComplete();
+                            break;
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        if (count == Constants.REPEAT_TIME) {
+                            System.out.println(Constants.stringNowTime() + " : 断线重连"
+                                    + Constants.REPEAT_TIME + "次之后仍然未成功,结束重连.....");
+                            break;
+                        } else {
+                            System.out.println(Constants.stringNowTime() + " : 本次断线重连失败,5s后进行第" + (count + 1) + "次重连.....");
+                            try {
+                                Thread.sleep(5000);
+                                System.out.println(Constants.stringNowTime() + " : 开始第" + (count + 1) + "次重连.....");
+                            } catch (InterruptedException e12) {
+                            }
+                        }
+                    }
+
+                }
+```
+
+
+
+编码，解码协议，根据实际情况而定
 
 ```java
 public class FrameDecoder extends CumulativeProtocolDecoder {
@@ -154,7 +232,6 @@ public class HeartBeatMessageFactory implements KeepAliveMessageFactory {
 }
 ```
 
-其他没什么核心的东西，完整项目代码我会上传到[GitHub]()
 
 
 
