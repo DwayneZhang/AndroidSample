@@ -69,7 +69,7 @@ public class ClientConnectManager {
 
                 //设置心跳包
                 /*KeepAliveFilter heartFilter = new KeepAliveFilter(new HeartBeatMessageFactory());
-                //每 1 分钟发送一个心跳包 开始设置成5分钟，后来会断开，先改成1分钟
+                //每 1 分钟发送一个心跳包
                 heartFilter.setRequestInterval(1 * 60);
                 //心跳包超时时间 10s
                 heartFilter.setRequestTimeout(10);
