@@ -16,7 +16,8 @@ import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 public class HeartBeatTimeoutHandler implements KeepAliveRequestTimeoutHandler {
 
     @Override
-    public void keepAliveRequestTimedOut(KeepAliveFilter keepAliveFilter, IoSession ioSession) throws Exception {
+    public void keepAliveRequestTimedOut(KeepAliveFilter keepAliveFilter,
+                                         IoSession ioSession) throws Exception {
 
     }
 }

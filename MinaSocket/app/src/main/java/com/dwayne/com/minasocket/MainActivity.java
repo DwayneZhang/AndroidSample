@@ -1,13 +1,12 @@
 package com.dwayne.com.minasocket;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dwayne.com.minasocket.socket.ClientConnectManager;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:56
@@ -15,7 +14,6 @@ import com.dwayne.com.minasocket.socket.ClientConnectManager;
  * @chang time
  * @class describe
  */
-
 
 
 public class MainActivity extends AppCompatActivity {

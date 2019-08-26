@@ -10,7 +10,6 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35
@@ -33,13 +32,14 @@ public class MessageHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause)
             throws Exception {
-        Log.d(TAG, Constants.stringNowTime() + " : 客户端调用exceptionCaught" + cause.getMessage());
+        Log.d(TAG,
+                Constants.stringNowTime() + " : 客户端调用exceptionCaught" + cause.getMessage());
     }
 
     @Override
     public void messageReceived(IoSession session, Object message)
             throws Exception {
-        Log.i(TAG,  "接收到服务器端消息：" + message.toString());
+        Log.i(TAG, "接收到服务器端消息：" + message.toString());
     }
 
     @Override

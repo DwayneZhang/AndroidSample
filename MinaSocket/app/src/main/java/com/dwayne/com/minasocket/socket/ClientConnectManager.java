@@ -7,7 +7,6 @@ import com.dwayne.com.minasocket.Constants;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.keepalive.KeepAliveFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
@@ -23,7 +22,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35
@@ -35,20 +33,18 @@ import io.reactivex.schedulers.Schedulers;
 public class ClientConnectManager {
 
     private static ClientConnectManager instance;
-
-
-    public static ClientConnectManager getInstance() {
-        if (null == instance) {
-            instance = new ClientConnectManager();
-        }
-        return instance;
-    }
+    private Context context;
 
     private ClientConnectManager() {
 
     }
 
-    private Context context;
+    public static ClientConnectManager getInstance() {
+        if(null == instance) {
+            instance = new ClientConnectManager();
+        }
+        return instance;
+    }
 
     public void init(Context context) {
         this.context = context;
@@ -63,12 +59,14 @@ public class ClientConnectManager {
 //                mSocketConnector.setConnectTimeoutMillis(Constants.TIMEOUT);
 
                 //设置协议封装解析处理
-                mSocketConnector.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new FrameCodecFactory()));
+                mSocketConnector.getFilterChain().addLast("protocol",
+                        new ProtocolCodecFilter(new FrameCodecFactory()));
                 // 设置日志输出工厂
                 mSocketConnector.getFilterChain().addLast("logger", new LoggingFilter());
 
                 //设置心跳包
-                /*KeepAliveFilter heartFilter = new KeepAliveFilter(new HeartBeatMessageFactory());
+                /*KeepAliveFilter heartFilter = new KeepAliveFilter(new
+                HeartBeatMessageFactory());
                 //每 1 分钟发送一个心跳包
                 heartFilter.setRequestInterval(1 * 60);
                 //心跳包超时时间 10s
@@ -88,7 +86,8 @@ public class ClientConnectManager {
 
 
                 //配置服务器地址
-                InetSocketAddress mSocketAddress = new InetSocketAddress(Constants.HOST, Constants.PORT);
+                InetSocketAddress mSocketAddress = new InetSocketAddress(Constants.HOST
+                        , Constants.PORT);
                 //发起连接
                 ConnectFuture mFuture = mSocketConnector.connect(mSocketAddress);
                 mFuture.awaitUninterruptibly();
@@ -130,34 +129,39 @@ public class ClientConnectManager {
                 // 执行到这里表示Session会话关闭了，需要进行重连操作
                 int count = 0;// 记录尝试重连的次数
                 NioSocketConnector mSocketConnector = null;
-                while (!isRepeat[0] && count < 10) {
+                while(!isRepeat[0] && count < 10) {
                     try {
                         count++;
-                        if (mSocketConnector == null) {
+                        if(mSocketConnector == null) {
                             mSocketConnector = new NioSocketConnector();
                         }
 
 //                        mSocketConnector.setConnectTimeoutMillis(Constants.TIMEOUT);
 
-                        if (!mSocketConnector.getFilterChain().contains("protocol")) {
+                        if(!mSocketConnector.getFilterChain().contains("protocol")) {
                             //设置协议封装解析处理
-                            mSocketConnector.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new FrameCodecFactory()));
+                            mSocketConnector.getFilterChain().addLast("protocol",
+                                    new ProtocolCodecFilter(new FrameCodecFactory()));
                         }
 
-                        if (!mSocketConnector.getFilterChain().contains("logger")) {
+                        if(!mSocketConnector.getFilterChain().contains("logger")) {
                             // 设置日志输出工厂
-                            mSocketConnector.getFilterChain().addLast("logger", new LoggingFilter());
+                            mSocketConnector.getFilterChain().addLast("logger",
+                                    new LoggingFilter());
                         }
 
                         /*if (!mSocketConnector.getFilterChain().contains("heartbeat")) {
                             //设置心跳包
-                            KeepAliveFilter heartFilter = new KeepAliveFilter(new HeartBeatMessageFactory());
+                            KeepAliveFilter heartFilter = new KeepAliveFilter(new
+                            HeartBeatMessageFactory());
                             //每 1 分钟发送一个心跳包
                             heartFilter.setRequestInterval(1 * 60);
                             //心跳包超时时间 10s
                             heartFilter.setRequestTimeout(10);
-//                            heartFilter.setRequestTimeoutHandler(new HeartBeatTimeoutHandler());
-                            mSocketConnector.getFilterChain().addLast("heartbeat", heartFilter);
+//                            heartFilter.setRequestTimeoutHandler(new
+HeartBeatTimeoutHandler());
+                            mSocketConnector.getFilterChain().addLast("heartbeat",
+                            heartFilter);
                         }*/
 
                         //设置 handler 处理业务逻辑
@@ -171,29 +175,31 @@ public class ClientConnectManager {
                         mSocketConnector.getSessionConfig().setReaderIdleTime(60);
 
                         //配置服务器地址
-                        InetSocketAddress mSocketAddress = new InetSocketAddress(Constants.HOST, Constants.PORT);
+                        InetSocketAddress mSocketAddress =
+                                new InetSocketAddress(Constants.HOST, Constants.PORT);
                         //发起连接
                         ConnectFuture mFuture = mSocketConnector.connect(mSocketAddress);
                         mFuture.awaitUninterruptibly();
                         IoSession mSession = mFuture.getSession();
-                        if (mSession.isConnected()) {
+                        if(mSession.isConnected()) {
                             isRepeat[0] = true;
                             e.onNext(mSession);
                             e.onComplete();
                             break;
                         }
-                    } catch (Exception e1) {
+                    } catch(Exception e1) {
                         e1.printStackTrace();
-                        if (count == Constants.REPEAT_TIME) {
+                        if(count == Constants.REPEAT_TIME) {
                             System.out.println(Constants.stringNowTime() + " : 断线重连"
                                     + Constants.REPEAT_TIME + "次之后仍然未成功,结束重连.....");
                             break;
                         } else {
-                            System.out.println(Constants.stringNowTime() + " : 本次断线重连失败,5s后进行第" + (count + 1) + "次重连.....");
+                            System.out.println(Constants.stringNowTime() + " : " +
+                                    "本次断线重连失败,5s后进行第" + (count + 1) + "次重连.....");
                             try {
                                 Thread.sleep(5000);
                                 System.out.println(Constants.stringNowTime() + " : 开始第" + (count + 1) + "次重连.....");
-                            } catch (InterruptedException e12) {
+                            } catch(InterruptedException e12) {
                             }
                         }
                     }
@@ -201,7 +207,7 @@ public class ClientConnectManager {
                 }
 
             }
-        }).subscribeOn(Schedulers.io()) .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Object>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Object>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 

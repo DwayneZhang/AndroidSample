@@ -8,7 +8,6 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import java.nio.charset.Charset;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35
@@ -23,13 +22,14 @@ public class FrameDecoder extends CumulativeProtocolDecoder {
     private final static Charset charset = Charset.forName("UTF-8");
 
     @Override
-    protected boolean doDecode(IoSession ioSession, IoBuffer ioBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
+    protected boolean doDecode(IoSession ioSession, IoBuffer ioBuffer,
+                               ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
 
         //数据粘包，断包处理
         int startPosition = ioBuffer.position();
-        while (ioBuffer.hasRemaining()) {
+        while(ioBuffer.hasRemaining()) {
             byte b = ioBuffer.get();
-            if (b == '\n') {//读取到\n时候认为一行已经读取完毕
+            if(b == '\n') {//读取到\n时候认为一行已经读取完毕
                 int currentPosition = ioBuffer.position();
                 int limit = ioBuffer.limit();
                 ioBuffer.position(startPosition);

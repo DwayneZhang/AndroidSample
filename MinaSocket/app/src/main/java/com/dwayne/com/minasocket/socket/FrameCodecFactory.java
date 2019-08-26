@@ -6,7 +6,6 @@ import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35
@@ -15,7 +14,7 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
  * @class describe
  */
 
-public class FrameCodecFactory implements ProtocolCodecFactory{
+public class FrameCodecFactory implements ProtocolCodecFactory {
     @Override
     public ProtocolEncoder getEncoder(IoSession ioSession) throws Exception {
         return new FrameEncoder();

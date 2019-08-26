@@ -1,6 +1,5 @@
 package com.dwayne.com.minasocket.socket;
 
-import android.util.Log;
 import org.apache.mina.core.service.IoService;
 import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IdleStatus;
@@ -8,7 +7,6 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35

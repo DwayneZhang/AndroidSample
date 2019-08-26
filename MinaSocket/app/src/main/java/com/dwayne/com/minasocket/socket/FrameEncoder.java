@@ -9,7 +9,6 @@ import org.apache.mina.filter.codec.textline.LineDelimiter;
 import java.nio.charset.Charset;
 
 /**
- *
  * @author Dwayne
  * @email dev1024@foxmail.com
  * @time 2019/8/25 16:35
@@ -20,8 +19,10 @@ import java.nio.charset.Charset;
 
 public class FrameEncoder implements ProtocolEncoder {
     private final static Charset charset = Charset.forName("UTF-8");
+
     @Override
-    public void encode(IoSession ioSession, Object message, ProtocolEncoderOutput protocolEncoderOutput) throws Exception {
+    public void encode(IoSession ioSession, Object message,
+                       ProtocolEncoderOutput protocolEncoderOutput) throws Exception {
         IoBuffer buff = IoBuffer.allocate(100).setAutoExpand(true);
         buff.putString(message.toString(), charset.newEncoder());
         // put 当前系统默认换行符 WINDOWS：\r\n, Linux:\n
